@@ -17,6 +17,3 @@ export default function Home() {
     </main>
   )
 }
-
-
-// REMEMBER: add to cart button, 
