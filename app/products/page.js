@@ -2,37 +2,43 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import ProductCard from './components/product-card';
-import Link from 'next/link'
-// import { useRouter } from 'next/router' 
+// import Link from 'next/link'
+import Search from './components/search';
+import { useRouter } from 'next/navigation' 
 const page = () => {
-    // const router = useRouter();
+    const router = useRouter();
 
     const [products, setProducts] = useState([]);
-
-    const getProducts = async () => {
-        const res = await fetch('https://dummyjson.com/products');
+    const [search, setSearch] = useState('');
+    const getProducts = async (search) => {
+        const res = await fetch(`https://dummyjson.com/products${search ? `/search?q=${search}` : ''}`);
         const {products} = await res.json();
         setProducts(products);
     }
 
     useEffect(() => {
-        getProducts();
-    }, []);
+        getProducts(search);
+    }, [search]);
 
-    // const goToProductPage = (e, id) => {
-    //     e.preventDefault()
-    //     router.push(`/products/${id}`)
-    //   }
+    const goToProductPage = (id) => {
+        router.push(`/products/${id}`)
+      }
 
   return (
+    <>
+    {/* <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} /> */}
+    <Search />
     <div style={{display: "flex", flexWrap: "wrap" }}>
         {products.length !== 0 && products.map((product) => (
-            <Link href={`/products/${product.id}`} key={product.id}>
+        //   <Link href={`/products/${product.id}`} key={product.id}></Link>
+                <div onClick={() => goToProductPage(product.id)}>
                 <ProductCard product={product} key={product.id}  />
-            </Link>
+                </div>
+      
             ))
         } 
     </div>
+    </>
   )
 }
 
